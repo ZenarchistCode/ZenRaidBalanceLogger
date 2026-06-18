@@ -179,8 +179,12 @@ class ZenRaidBalanceLogger
 		int trackedItemCount = 0;
 		int chargeTotal = 0;
 		int chargeOutputTotal = 0;
+		int homemadeChargeTotal = 0;
+		int heavyChargeTotal = 0;
 		int storedChargeTotal = 0;
 		int storedChargeOutputTotal = 0;
+		int storedHomemadeChargeTotal = 0;
+		int storedHeavyChargeTotal = 0;
 
 		foreach (ItemBase item : ZenRaidBalanceRegistry.TRACKED_ITEMS)
 		{
@@ -196,6 +200,12 @@ class ZenRaidBalanceLogger
 				chargeTotal++;
 				chargeOutputTotal += chargeDamage;
 
+				if (chargeType == "HDSN_BreachingCharge")
+					homemadeChargeTotal++;
+
+				if (chargeType == "HDSN_BreachingChargeHeavy")
+					heavyChargeTotal++;
+
 				EntityAI storageRoot = GetStoredRoot(item);
 				if (storageRoot)
 				{
@@ -206,6 +216,12 @@ class ZenRaidBalanceLogger
 						storageStats.AddOutput(chargeType, chargeDamage);
 						storedChargeTotal++;
 						storedChargeOutputTotal += chargeDamage;
+
+						if (chargeType == "HDSN_BreachingCharge")
+							storedHomemadeChargeTotal++;
+
+						if (chargeType == "HDSN_BreachingChargeHeavy")
+							storedHeavyChargeTotal++;
 					}
 					else
 					{
@@ -266,9 +282,8 @@ class ZenRaidBalanceLogger
 		LogLine("Raid damage required inside territories: " + globalRaidDamageRequiredInsideTerritories.ToString());
 		LogLine("Raid damage required outside territories: " + outsideTerritories.RaidDamageRequired.ToString());
 		LogLine("Raid damage required total: " + globalRaidDamageRequiredTotal.ToString());
-		LogLine("Breaching charges anywhere: count=" + chargeTotal.ToString() + " output=" + globalRaidDamageAvailableTotal.ToString());
-		LogLine("Breaching charges stored inside territories: count=" + storedChargeTotal.ToString() + " output=" + globalRaidDamageStoredInsideTerritories.ToString());
-		LogLine("---");
+		LogLine("Breaching charges anywhere: count=" + chargeTotal.ToString() + " homemade=" + homemadeChargeTotal.ToString() + " heavy=" + heavyChargeTotal.ToString() + " output=" + globalRaidDamageAvailableTotal.ToString());
+		LogLine("Breaching charges stored inside territories: count=" + storedChargeTotal.ToString() + " homemade=" + storedHomemadeChargeTotal.ToString() + " heavy=" + storedHeavyChargeTotal.ToString() + " output=" + globalRaidDamageStoredInsideTerritories.ToString());LogLine("---");
 		LogLine("Territories are sorted by highest raid damage required.");
 		LogLine("Coverage means stored raid output divided by raid damage required.");
 		LogLine("============================================================");
