@@ -27,6 +27,8 @@ class ZenRaidBalanceTerritoryStats
 	int RaidDamageOutputStored;
 	int RaidTargetCount;
 	int StoredChargeCount;
+	int StoredHomemadesCount;
+	int StoredHeaviesCount;
 	ref map<string, ref ZenRaidBalanceBreakdown> RequiredByType;
 	ref map<string, ref ZenRaidBalanceBreakdown> OutputByType;
 
@@ -39,6 +41,8 @@ class ZenRaidBalanceTerritoryStats
 		RaidDamageOutputStored = 0;
 		RaidTargetCount = 0;
 		StoredChargeCount = 0;
+		StoredHomemadesCount = 0;
+		StoredHeaviesCount = 0;
 		RequiredByType = new map<string, ref ZenRaidBalanceBreakdown>;
 		OutputByType = new map<string, ref ZenRaidBalanceBreakdown>;
 	}
@@ -59,6 +63,13 @@ class ZenRaidBalanceTerritoryStats
 			return;
 
 		StoredChargeCount++;
+
+		if (type == "HDSN_BreachingCharge")
+			StoredHomemadesCount++;
+
+		if (type == "HDSN_BreachingChargeHeavy")
+			StoredHeaviesCount++;
+
 		RaidDamageOutputStored += damage;
 		AddBreakdown(OutputByType, type, damage);
 	}
@@ -531,8 +542,8 @@ class ZenRaidBalanceLogger
 		LogLine("---");
 		LogLine(prefix + " Territory: " + stats.TerritoryName + " | ID=" + stats.TerritoryID.ToString() + " | Pos=" + stats.TerritoryPosition.ToString());
 		LogLine("Raid Damage Required: " + stats.RaidDamageRequired.ToString() + " | Stored Raid Output: " + stats.RaidDamageOutputStored.ToString() + " | Coverage: " + coverage.ToString() + "%");
-		LogLine("Raid Targets: " + stats.RaidTargetCount.ToString() + " | Stored Charges: " + stats.StoredChargeCount.ToString());
-
+		LogLine("Raid Targets: " + stats.RaidTargetCount.ToString() + " | Stored Charges: " + stats.StoredChargeCount.ToString() + " | Homemade: " + stats.StoredHomemadesCount.ToString() + " | Heavy: " + stats.StoredHeaviesCount.ToString());
+		
 		if (stats.RequiredByType.Count() > 0)
 		{
 			LogLine("Required by target type:");
